@@ -1,0 +1,41 @@
+@AbapCatalog.viewEnhancementCategory: [#NONE]
+@AccessControl.authorizationCheck: #NOT_REQUIRED
+@EndUserText.label: 'Characteristics value input get Material'
+@Metadata.ignorePropagatedAnnotations: true
+@ObjectModel.usageType:{
+    serviceQuality: #X,
+    sizeCategory: #S,
+    dataClass: #MIXED
+}
+define view entity ZCDS_MATERIAL_CLASS_CHAR
+  as select from I_ClfnObjectCharcValueBasic as Val
+    inner join   I_ClfnCharacteristic        as CharDef on CharDef.CharcInternalID = Val.CharcInternalID
+{
+  key Val.ClfnObjectID,
+
+      max( case CharDef.Characteristic when 'ZP_FAMILYCODE'            then Val.CharcValue else '' end ) as ZP_FAMILYCODE,
+      max( case CharDef.Characteristic when 'ZP_SUBFAMILY'             then Val.CharcValue else '' end ) as ZP_SUBFAMILY,
+      max( case CharDef.Characteristic when 'ZP_TINTCODE'              then Val.CharcValue else '' end ) as ZP_TINTCODE,
+      max( case CharDef.Characteristic when 'ZP_COATING'               then Val.CharcValue else '' end ) as ZP_COATING,
+      max( case CharDef.Characteristic when 'ZP_COMTHICKNESS'          then Val.CharcValue else '' end ) as ZP_COMTHICKNESS,
+      max( case CharDef.Characteristic when 'ZP_PATTWIRED'             then Val.CharcValue else '' end ) as ZP_PATTWIRED,
+      max( case CharDef.Characteristic when 'ZP_LAMINATE'              then Val.CharcValue else '' end ) as ZP_LAMINATE,
+      max( case CharDef.Characteristic when 'ZP_QUALITYCODE'           then Val.CharcValue else '' end ) as ZP_QUALITYCODE,
+      max( case CharDef.Characteristic when 'ZP_SIZE'                  then Val.CharcValue else '' end ) as ZP_SIZE,
+      max( case CharDef.Characteristic when 'ZP_PACKINGCODE'           then Val.CharcValue else '' end ) as ZP_PACKINGCODE,
+      max( case CharDef.Characteristic when 'ZP_PACKAGETYPE'           then Val.CharcValue else '' end ) as ZP_PACKAGETYPE,
+      max( case CharDef.Characteristic when 'ZP_SURFPROTECTCODE'       then Val.CharcValue else '' end ) as ZP_SURFPROTECTCODE,
+      max( case CharDef.Characteristic when 'ZP_FAULTMARKINGS'         then Val.CharcValue else '' end ) as ZP_FAULTMARKINGS,
+      max( case CharDef.Characteristic when 'ZP_INTERLEAFCODE'         then Val.CharcValue else '' end ) as ZP_INTERLEAFCODE,
+      max( case CharDef.Characteristic when 'ZP_EMBODIEDCARBON'        then Val.CharcValue else '' end ) as ZP_EMBODIEDCARBON,
+      max( case CharDef.Characteristic when 'ZP_PRODUCTIONORIENTATION' then Val.CharcValue else '' end ) as ZP_PRODUCTIONORIENTATION,
+      max( case CharDef.Characteristic when 'ZP_LENGTH'                then Val.CharcValue else '' end ) as ZP_LENGTH,
+      max( case CharDef.Characteristic when 'ZP_WIDTH'                 then Val.CharcValue else '' end ) as ZP_WIDTH
+}
+where
+      Val.IsDeleted =    ''
+  and Val.ClassType =    '001'
+  and CharDef.Characteristic like 'ZP_%'
+group by
+  Val.ClfnObjectID,
+  Val.ClfnObjectType
